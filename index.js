@@ -24,7 +24,7 @@ async function run() {
     await client.connect();
     console.log("Connected to MongoDB");
 
-    const db = client.db("assignment");
+    const db = client.db("jersey-panda");
     const galleryCollection = db.collection("gallery");
     const jerseyCollection = db.collection("jersey");
     const customJerseyCollection = db.collection("customJersey");
