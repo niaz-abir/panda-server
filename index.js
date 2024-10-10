@@ -27,92 +27,126 @@ async function run() {
     console.log("Connected to MongoDB");
 
     const db = client.db("assignment");
-    const collection = db.collection("users");
-    const donation = db.collection("donation");
+    const galleryCollection = db.collection("gallery");
+    const jerseyCollection = db.collection("jersey");
+    const customJerseyCollection = db.collection("customJersey");
+    const footballItemCollection = db.collection("footballItem");
 
-    // User Registration
-    app.post("/api/v1/register", async (req, res) => {
-      const { name, email, password } = req.body;
-
-      // Check if email already exists
-      const existingUser = await collection.findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({
-          success: false,
-          message: "User already exists",
-        });
-      }
-
-      // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Insert user into the database
-      await collection.insertOne({ name, email, password: hashedPassword });
-
-      res.status(201).json({
-        success: true,
-        message: "User registered successfully",
-      });
-    });
-
-    // User Login
-    app.post("/api/v1/login", async (req, res) => {
-      const { email, password } = req.body;
-
-      // Find user by email
-      const user = await collection.findOne({ email });
-      if (!user) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-
-      // Compare hashed password
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return res.status(401).json({ message: "Invalid email or password" });
-      }
-
-      // Generate JWT token
-      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: process.env.EXPIRES_IN,
-      });
-
-      res.json({
-        success: true,
-        message: "Login successful",
-        token,
-      });
-    });
-
-    app.get("/api/v1/donation", async (req, res) => {
+    // jersey api
+    app.get("/api/v1/jersey", async (req, res) => {
       const query = {};
-      const result = await donation.find(query).toArray();
+      const result = await jerseyCollection.find(query).toArray();
       res.send(result);
     });
-    app.get("/api/v1/donation/:id", async (req, res) => {
+    app.get("/api/v1/jersey/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await donation.findOne(query);
+      const result = await jerseyCollection.findOne(query);
       res.send(result);
     });
 
-    app.post("/api/v1/create-donation", async (req, res) => {
-      const newDonation = req.body;
-      const response = await donation.insertOne(newDonation);
+    app.post("/api/v1/create-jersey", async (req, res) => {
+      const newJersey = req.body;
+      const response = await jerseyCollection.insertOne(newJersey);
       res.send(response);
     });
 
-    app.delete("/api/v1/delete-donation/:id", async (req, res) => {
+    app.delete("/api/v1/delete-jersey/:id", async (req, res) => {
       const id = req.params.id;
-      const response = await donation.deleteOne({ _id: new ObjectId(id) });
+      const response = await jerseyCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+      console.log(response);
+      res.send(response);
+    });
+    // custom-jersey
+    app.get("/api/v1/custom-jersey", async (req, res) => {
+      const query = {};
+      const result = await customJerseyCollection.find(query).toArray();
+      res.send(result);
+    });
+    app.get("/api/v1/custom-jersey/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await customJerseyCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.post("/api/v1/create-custom-jersey", async (req, res) => {
+      const newCustomJersey = req.body;
+      const response = await customJerseyCollection.insertOne(newCustomJersey);
+      res.send(response);
+    });
+
+    app.delete("/api/v1/delete-custom-jersey/:id", async (req, res) => {
+      const id = req.params.id;
+      const response = await customJerseyCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
       console.log(response);
       res.send(response);
     });
 
-    app.put("/api/v1/update-donation/:id", async (req, res) => {
+    // football item api
+    app.get("/api/v1/football-item", async (req, res) => {
+      const query = {};
+      const result = await footballItemCollection.find(query).toArray();
+      res.send(result);
+    });
+    app.get("/api/v1/football-item/:id", async (req, res) => {
       const id = req.params.id;
-      const updatedDonation = req.body;
       const query = { _id: new ObjectId(id) };
-      const last = await donation.findOne(query);
+      const result = await footballItemCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.post("/api/v1/create-football-item", async (req, res) => {
+      const newFootballItem = req.body;
+      const response = await footballItemCollection.insertOne(newFootballItem);
+      res.send(response);
+    });
+
+    app.delete("/api/v1/delete-football-item/:id", async (req, res) => {
+      const id = req.params.id;
+      const response = await footballItemCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+      console.log(response);
+      res.send(response);
+    });
+    // gallery api
+    app.get("/api/v1/gallery", async (req, res) => {
+      const query = {};
+      const result = await galleryCollection.find(query).toArray();
+      res.send(result);
+    });
+    app.get("/api/v1/gallery/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await galleryCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.post("/api/v1/create-gallery", async (req, res) => {
+      const newGallery = req.body;
+      const response = await galleryCollection.insertOne(newGallery);
+      res.send(response);
+    });
+
+    app.delete("/api/v1/delete-gallery/:id", async (req, res) => {
+      const id = req.params.id;
+      const response = await galleryCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
+      console.log(response);
+      res.send(response);
+    });
+
+    app.put("/api/v1/update-gallery/:id", async (req, res) => {
+      const id = req.params.id;
+      const updateGallery = req.body;
+      const query = { _id: new ObjectId(id) };
+      const last = await galleryCollection.findOne(query);
       console.log(last);
 
       const updateDoc = {
