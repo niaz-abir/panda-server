@@ -1,9 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const bcrypt = require("bcrypt");
 const { MongoClient, ObjectId } = require("mongodb");
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
 
 const app = express();
 const port = process.env.PORT || 5000;
