@@ -116,7 +116,7 @@ async function run() {
     app.get("/api/v1/gallery", async (req, res) => {
       const query = {};
       const result = await galleryCollection.find(query).toArray();
-      res.send(result);
+      res.send({ data: result });
     });
     app.get("/api/v1/gallery/:id", async (req, res) => {
       const id = req.params.id;
