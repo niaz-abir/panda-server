@@ -34,7 +34,7 @@ async function run() {
     app.get("/api/v1/jersey", async (req, res) => {
       const query = {};
       const result = await jerseyCollection.find(query).toArray();
-      res.send(result);
+      res.send({ data: result });
     });
     app.get("/api/v1/jersey/:id", async (req, res) => {
       const id = req.params.id;
@@ -61,7 +61,7 @@ async function run() {
     app.get("/api/v1/custom-jersey", async (req, res) => {
       const query = {};
       const result = await customJerseyCollection.find(query).toArray();
-      res.send(result);
+      res.send({ data: result });
     });
     app.get("/api/v1/custom-jersey/:id", async (req, res) => {
       const id = req.params.id;
@@ -89,7 +89,7 @@ async function run() {
     app.get("/api/v1/football-item", async (req, res) => {
       const query = {};
       const result = await footballItemCollection.find(query).toArray();
-      res.send(result);
+      res.send({ data: result });
     });
     app.get("/api/v1/football-item/:id", async (req, res) => {
       const id = req.params.id;
